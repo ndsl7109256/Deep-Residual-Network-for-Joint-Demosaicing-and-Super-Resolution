@@ -52,44 +52,30 @@ def create_model():
 	  ##STAGE 2
 	  ####Residual Block
 	  
-	stage_2_Conv1_1 = keras.layers.Conv2D(filters = 256, #feature map number
-	                     kernel_size = 3, 
-	                     strides = 1,  # 2
-	                     padding = 'same',
-	                     input_shape = (None,None,64))(x)
-	  
-	stage_2_PReLu1 = keras.layers.PReLU(alpha_initializer='zeros', alpha_regularizer=None, alpha_constraint=None, shared_axes=[1,2])(stage_2_Conv1_1)
-	stage_2_Conv1_2 = keras.layers.Conv2D(filters = 256, #feature map number
-	                     kernel_size = 3, 
-	                     strides = 1,  # 2
-	                     padding = 'same',
-	                     input_shape = (None,None,64))(stage_2_PReLu1)
-	 
-	  
-	stage_2_Concat_1 = keras.layers.Add()([stage_2_Conv1_2,x])
-	  
-	stage_2_Conv2_1 = keras.layers.Conv2D(filters = 256, #feature map number
-	                     kernel_size = 3, 
-	                     strides = 1,  # 2
-	                     padding = 'same',
-	                     input_shape = (None,None,64))(stage_2_Concat_1)
-	  
-	stage_2_PReLu2 = keras.layers.PReLU(alpha_initializer='zeros', alpha_regularizer=None, alpha_constraint=None, shared_axes=[1,2])(stage_2_Conv2_1)
-	stage_2_Conv2_2 = keras.layers.Conv2D(filters = 256, #feature map number
-	                     kernel_size = 3, 
+	for i in range(16):
+	    stage_2_Conv1_1 = keras.layers.Conv2D(filters = 256, #feature map number
+	                       kernel_size = 3, 
+	                       strides = 1,  # 2
+	                       padding = 'same',
+	                       input_shape = (None,None,64))(x)
+	    
+	    stage_2_PReLu1 = keras.layers.PReLU(alpha_initializer='zeros', alpha_regularizer=None, alpha_constraint=None, shared_axes=[1,2])(stage_2_Conv1_1)
+	    stage_2_Conv1_2 = keras.layers.Conv2D(filters = 256, #feature map number
+	                       kernel_size = 3, 
+	                       strides = 1,  # 2
+	                       padding = 'same',
+	                       input_shape = (None,None,64))(stage_2_PReLu1)
+	   
+	    
+	    x = keras.layers.Add()([stage_2_Conv1_2,x])
+	    #x = keras.layers.PReLU(alpha_initializer='zeros', alpha_regularizer=None, alpha_constraint=None, shared_axes=[1,2])(x)
 
-	                     strides = 1,  # 2
-	                     padding = 'same',
-	                     input_shape = (None,None,64))(stage_2_PReLu2)
-	 
-	  
-	stage_2_Concat_2 = keras.layers.Add()([stage_2_Conv2_2,stage_2_Concat_1])
 	  
 	  ##STAGE 3
 	  ####Sub-pixel Conv
 	  #x = SubpixelConv2D2((64,64,256), scale=2)(x)
-	sub_layer = Lambda(lambda x:tf.nn.depth_to_space(stage_2_Concat_2,2))
-	x = sub_layer(inputs=stage_2_Concat_2)
+	sub_layer = Lambda(lambda x:tf.nn.depth_to_space(x,2))
+	x = sub_layer(inputs=x)
 	  
 
 	  ####Conv, PReLU
