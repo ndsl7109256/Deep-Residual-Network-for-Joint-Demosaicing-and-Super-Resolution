@@ -4,6 +4,7 @@ from numpy import asarray
 import math
 import copy
 import os
+import cv2
 from PIL import Image 
 
 patch_size = 64 #input = 64x64
@@ -33,8 +34,8 @@ def split(img,name):
     height,width,c = img.shape;
     print(img.shape)
     count = 0;
-    for i in range(0,height,20):#step = 20
-        for j in range(0,width,20):
+    for i in range(0,height,15):
+        for j in range(0,width,15):
             if( i + label_size < height and j + label_size < width ):
                 tmp = np.zeros([label_size,label_size,3]);
                 tmp = img[ i : i + label_size, j : j + label_size,:];
@@ -66,12 +67,30 @@ def main():
     if not os.path.exists('label'):
         os.makedirs('label')
     
-    entries = os.listdir('koda/')
+
+    
+    # entries = os.listdir('koda/')
+    # for entry in entries:
+    #     print(entry)
+    #     path = 'koda/'+entry
+    #     img = Image.open(path)
+    #     zoom = img.resize((math.floor(img.size[0]/2),math.floor(img.size[1]/2)) )
+    #     zoom = asarray(zoom)
+    #     zoom = bayer_reverse(zoom)
+    #     im = Image.fromarray(zoom)
+    #     im = im.convert("L")
+    #     path = 'kodap/'+entry
+    #     im.save(path)
+
+    entries = os.listdir('origin/')
     for entry in entries:
         print(entry)
-        path = 'koda/'+entry
+        path = 'origin/'+entry
         img = Image.open(path)
+        img = np.array(img)   
+        # img = cv2.imread(path)
         split(img,entry)
+
 
   
 
