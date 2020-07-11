@@ -68,7 +68,7 @@ def create_model():
 	   
 	    
 	    x = keras.layers.Add()([stage_2_Conv1_2,x])
-	    #x = keras.layers.PReLU(alpha_initializer='zeros', alpha_regularizer=None, alpha_constraint=None, shared_axes=[1,2])(x)
+	    x = keras.layers.PReLU(alpha_initializer='zeros', alpha_regularizer=None, alpha_constraint=None, shared_axes=[1,2])(x)
 
 	  
 	  ##STAGE 3
@@ -123,7 +123,7 @@ for entry in entries:
          print(get_cpsnr(out,ori,12) );
          sum+=get_cpsnr(out,ori,12);
          out = image.array_to_img(out)
-         #plt.imshow(out)
-         #plt.show()
+         plt.imshow(out)
+         plt.show()
 print('avg')        
 print(sum/len(entries))
